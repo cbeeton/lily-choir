@@ -59,20 +59,20 @@ music = {
   \new GrandStaff <<
     #(if (include-verse "DescantMusic") #{
     % descant in the parts midi only
-    % not printing the descant - if you want it, add print into the set of tags on the next line
-    \tag #'(play) \new Staff 
+    % if you don't want to print the descant, remove print from the set of tags on the next line
+    \tag #'(print play) \new Staff 
       \with { 
-        midiInstrument = "flute" 
+%        midiInstrument = "flute" 
         instrumentName = \markup \smallCaps "Descant"
         shortInstrumentName = \markup \smallCaps "D"
       }
-    \articulate 
+%    \articulate 
     <<  
       \Key
       \Time
       {
         \tag #'(accomp alto tenor bass) \set Staff.midiMaximumVolume = #0.4 % quieter melody in the parts files - keep the descant in to get any tempo changes in the (usually) last verse
-        \descantMusic % include enough skips to put it where you want it (i.e. last verse)
+        \DescantMusic % include enough skips to put it where you want it (i.e. last verse)
       }
     >>
     #})

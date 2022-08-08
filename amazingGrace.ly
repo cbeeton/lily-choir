@@ -26,6 +26,20 @@ Time = {
   \set Timing.beatStructure = 1,1,1
 }
 
+DescantMusic = \relative c' {
+  % skip intro
+  \partial 4 s4 \repeat unfold 7 s2. s2
+  % skip first 4 verses in the midi version
+  \tag #'(play alto tenor bass) {
+    s4 \repeat unfold 15 s2. s2
+    s4 \repeat unfold 15 s2. s2
+    s4 \repeat unfold 15 s2. s2
+    s4 \repeat unfold 15 s2. s2
+  }
+  % 5th verse has descant
+  b'4 | b2 d8 b | d2 d4 | e2 c4 | b2 b4 | b2 d8 b | d2 d4 | d2( e4 | fs2)
+  g4 | g2 g4 | f2 f4 | e2 c4 | b2 b4 | b2 d8 b | d2 \tuplet 3/2 { a8 b c } | b2. ~ 2
+}
 SopranoMusic = \relative c' {
   % intro
   \partial 4 b'4 | d4.( b8) d( b) | g2 d4

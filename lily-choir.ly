@@ -54,6 +54,18 @@ include-verse =
           #f #t)
 )
 
+#(define (define-missing-variable! id)
+  "Check if the identifier listed in the argument is
+   known to the parser.  If not, define it and set
+   its value to #f"
+        (define sym (string->symbol id))
+        (if (null? (ly:parser-lookup sym))
+            (ly:parser-define! sym #f)
+        )
+)
+
+#(define-missing-variable! "HideMetronome")
+
 music = {
   \transpose \OrigKey \TransposeToKey
   \new GrandStaff <<
@@ -92,7 +104,7 @@ music = {
     }
     <<
       \override Staff.TimeSignature #'style = #'()
-%      \omit Score.MetronomeMark    % hide the tempo marking
+       #(if HideMetronome #{ \omit Score.MetronomeMark #} )
       \new Voice = "sopranos" 
       \with { 
 %        \remove "Dynamic_engraver" 

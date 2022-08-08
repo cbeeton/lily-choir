@@ -27,6 +27,9 @@ Time = {
   \set Timing.beatStructure = 1,1,1
 }
 
+% Comment out the next line if you want to see the metronome markings
+HideMetronome = ##t
+
 % some functions to allow you to play with the tempo
 NewTempo = \OrigTempo
 slower =

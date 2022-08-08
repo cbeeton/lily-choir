@@ -16,15 +16,44 @@
 
 OrigKey = g
 TransposeToKey = f
+OrigTempo = 100
 Key = \key \OrigKey \major
 Time = {
   \time 3/4
-  \tempo 4 = 100
+  \tempo 4 = \OrigTempo
   % beam only 2 eights together: \set Timing .beatExceptions, baseMoment, beatStructure
   \set Timing.beamExceptions = #'()
   \set Timing.baseMoment = #(ly:make-moment 1/4)
   \set Timing.beatStructure = 1,1,1
 }
+
+% some functions to allow you to play with the tempo
+NewTempo = \OrigTempo
+slower =
+#(define-music-function (parser location) ()
+   #{
+        #(set! NewTempo (round (/(* NewTempo 95) 100)))
+        #(display (format "slower: \\tempo 4 = ~a\n" NewTempo))
+        \tempo 4 = #NewTempo
+   #}
+)
+hold =
+#(define-music-function (parser location) ()
+   #{
+        #(set! NewTempo (round (/(* NewTempo 50) 100)))
+        #(display (format "hold: \\tempo 4 = ~a\n" NewTempo))
+        \tempo 4 = #NewTempo
+   #}
+)
+atempo =
+#(define-music-function (parser location) ()
+   #{
+        #(set! NewTempo OrigTempo)
+        #(display (format  "atempo: \\tempo 4 = ~a\n" NewTempo))
+        \tempo 4 = #OrigTempo
+   #}
+)
+
 
 DescantMusic = \relative c' {
   % skip intro
@@ -38,7 +67,7 @@ DescantMusic = \relative c' {
   }
   % 5th verse has descant
   b'4 | b2 d8 b | d2 d4 | e2 c4 | b2 b4 | b2 d8 b | d2 d4 | d2( e4 | fs2)
-  g4 | g2 g4 | f2 f4 | e2 c4 | b2 b4 | b2 d8 b | d2 \tuplet 3/2 { a8 b c } | b2. ~ 2
+  g4 | g2 g4 | f2 f4 | e2 c4 | b2 b4 | b2 d8 b | \slower d4 ~ \slower 4 \slower \tuplet 3/2 { a8 b c } | \slower b2. ~ 2
 }
 SopranoMusic = \relative c' {
   % intro

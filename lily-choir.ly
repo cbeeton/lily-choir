@@ -60,7 +60,7 @@ music = {
     #(if (include-verse "DescantMusic") #{
     % descant in the parts midi only
     % if you don't want to print the descant, remove print from the set of tags on the next line
-    \tag #'(print play) \new Staff 
+    \tag #'(print play alto tenor bass) \new Staff 
       \with { 
 %        midiInstrument = "flute" 
         instrumentName = \markup \smallCaps "Descant"

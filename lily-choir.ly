@@ -43,6 +43,8 @@ SopranoMidiInstrument = "acoustic grand"
 AltoMidiInstrument = "acoustic grand"
 TenorMidiInstrument = "acoustic grand"
 BassMidiInstrument = "acoustic grand"
+SopranoInstrumentName = "Soprano"
+SopranoShortInstrumentName = "S"
 
 % kludgey way to exclude some stuff if the calling music doesn't include it
 include-verse =
@@ -58,8 +60,12 @@ music = {
     #(if (include-verse "DescantMusic") #{
     % descant in the parts midi only
     % not printing the descant - if you want it, add print into the set of tags on the next line
-    \tag #'(parts) \new Staff 
-      \with { midiInstrument = "flute" }
+    \tag #'(play) \new Staff 
+      \with { 
+        midiInstrument = "flute" 
+        instrumentName = \markup \smallCaps "Descant"
+        shortInstrumentName = \markup \smallCaps "D"
+      }
     \articulate 
     <<  
       \Key
@@ -72,12 +78,18 @@ music = {
     #})
     #(if (include-verse "Chords") #{
       \new ChordNames {
-        \tag #'(print parts lead) \Chords
+        \tag #'(print play lead) \Chords
       }
     #})
-    \tag #'(print parts lead soprano alto tenor bass) \new Staff 
-    \with { \remove "Dynamic_engraver" 
-      midiInstrument = "acoustic grand" }
+
+    \new ChoirStaff <<
+    \tag #'(print play lead soprano alto tenor bass) \new Staff 
+    \with { 
+      \remove "Dynamic_engraver" 
+      midiInstrument = "acoustic grand" 
+      instrumentName = \markup { \right-column { \smallCaps "Soprano" \line { \smallCaps "Alto" } } }
+      shortInstrumentName = \markup { \right-column { \smallCaps "S" \line { \smallCaps "A" } } }
+    }
     <<
       \override Staff.TimeSignature #'style = #'()
 %      \omit Score.MetronomeMark    % hide the tempo marking
@@ -87,14 +99,14 @@ music = {
       } {
         % this makes the alto part quiet if it's the same note as the sop - can't figure out how to avoid this
         \tag #'(alto tenor bass) \set Voice.midiMaximumVolume = #0.6 % quieter melody in the parts files
-        \tag #'(parts) \set Voice.midiMaximumVolume = #1.5 % louder melody in the complete version
+        \tag #'(play) \set Voice.midiMaximumVolume = #1.5 % louder melody in the complete version
         \voiceOne
         << 
           \Key
           \Time
           {
             % all parts include the sop line so that timing can be put there and applied to all parts
-            \tag #'(print parts lead soprano alto tenor bass) \SopranoMusic
+            \tag #'(print play lead soprano alto tenor bass) \SopranoMusic
           }
         >>
       }
@@ -106,7 +118,7 @@ music = {
           \Key
           \Time
           {
-            \tag #'(print parts alto) \AltoMusic
+            \tag #'(print play alto) \AltoMusic
           }
         >>
       }
@@ -118,9 +130,11 @@ music = {
     \new Lyrics = "lyricsFour"
     \new Lyrics = "lyricsFive"
     \new Lyrics = "lyricsSix"
-    \tag #'(print parts tenor bass) \new Staff = "men" 
+    \tag #'(print play tenor bass) \new Staff = "men" 
       \with {
         midiInstrument = "acoustic grand" 
+        instrumentName = \markup { \right-column { \smallCaps "Tenor" \line { \smallCaps "Bass" } } }
+        shortInstrumentName = \markup { \right-column { \smallCaps "T" \line { \smallCaps "B" } } }
       }
     <<
       \override Staff.TimeSignature #'style = #'()
@@ -133,7 +147,7 @@ music = {
           \Key 
           \Time
           {
-            \tag #'(print parts tenor) \TenorMusic
+            \tag #'(print play tenor) \TenorMusic
           }
          >>
       }
@@ -144,7 +158,7 @@ music = {
           \Key
           \Time
           {
-            \tag #'(print parts bass) \BassMusic
+            \tag #'(print play bass) \BassMusic
           }
         >>
       }
@@ -156,7 +170,7 @@ music = {
      #(if (include-verse "VerseFive") #{\tag #'(print lead) \context Lyrics = "lyricsFive" \lyricsto "sopranos" \VerseFive#})
      #(if (include-verse "VerseSix") #{\tag #'(print lead) \context Lyrics = "lyricsSix" \lyricsto "sopranos" \VerseSix#})
      #(if (include-verse "VerseSeven") #{\tag #'(print lead) \context Lyrics = "lyricsSeven" \lyricsto "sopranos" \VerseSeven#})
-
+    >> % end of ChoirStaff
 
     #(if (include-verse "OrganRH") #{
     \tag #'(print accomp) \new PianoStaff 
@@ -218,7 +232,7 @@ music = {
   }
 }
 \score {
-  \keepWithTag #'parts \unfoldRepeats \music
+  \keepWithTag #'play \unfoldRepeats \music
   \midi { }
 }
 

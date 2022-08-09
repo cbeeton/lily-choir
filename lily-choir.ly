@@ -1,6 +1,6 @@
 %{
    Lilypond code to create pdf and midi files, and also parts files (xxx-Alto.midi, xxx-Tenor.midi, xxx-Bass.midi) .
-   Also creates a Lead sheet if guitar chords are included, and an Accomp pdf if organ music is provided.
+   Also creates a Lead sheet if guitar chords are included, and an Accomp pdf if Piano music is provided.
    To use this file:
    Create variables as shown below.  Put tempo changes in the sop line only - it will be applied to all parts files.
    Then include at the bottom of the file:
@@ -22,9 +22,9 @@ DescantMusic   <- optional descant line.  included (quietly) in all parts, so te
 AltoMusic
 TenorMusic
 BassMusic
-OrganRH <- optional separate accompaniment RH
-OrganLH <- optional separate accompaniment LH
-OrganDynamics -> optional dynamics for accomp
+PianoRHMusic <- optional separate accompaniment RH
+PianoLHMusic <- optional separate accompaniment LH
+PianoDynamics -> optional dynamics for accomp
 
 \include "lily-choir.ly"
 
@@ -35,7 +35,7 @@ OrganDynamics -> optional dynamics for accomp
    - tweaks also required to adjust spacing for the specific piece...
    - dynamics?
    - have to edit this file to turn articulate on/off
-   - haven't tested the Organ part lately
+   - haven't tested the Piano part lately
 %}
 
 \include "articulate.ly"
@@ -178,12 +178,12 @@ music = {
       #(if (include-verse "VerseSeven") #{\tag #'(print lead) \context Lyrics = "lyricsSeven" \lyricsto "sopranos" \VerseSeven#})
     >> % end of ChoirStaff
 
-    #(if (include-verse "OrganRH") #{
+    #(if (include-verse "PianoRHMusic") #{
     \tag #'(print accomp) \new PianoStaff 
       \with { midiInstrument = "acoustic grand" }
 %    \articulate 
           <<
-          \tag #'midi \new Dynamics = "dynamics" \OrganDynamics  % for the midi
+          \tag #'midi \new Dynamics = "dynamics" \PianoDynamics  % for the midi
         \new Staff {
           \clef "treble"
           \override Staff.NoteCollision.merge-differently-headed = ##t
@@ -193,8 +193,8 @@ music = {
           \Time
           <<
           \new Voice <<
-            \OrganRH
-            \tag #'midi \OrganDynamics   % for the midi
+            \PianoRHMusic
+            \tag #'midi \PianoDynamics   % for the midi
           >>
           \new NullVoice = "accompVoice" { \SopranoMusic } % not printed but used to align lyrics
           >>
@@ -202,7 +202,7 @@ music = {
     \tag #'(accomp print) \context Lyrics = "lyricsOne" \lyricsto "accompVoice" \VerseOne
     \tag #'(accomp print) \context Lyrics = "lyricsTwo" \lyricsto "accompVoice" \VerseTwo
         \tag #'(accomp print lead) \new Dynamics {   % for the layout
-          \OrganDynamics
+          \PianoDynamics
         }
         \new Staff {
           \clef "bass"
@@ -212,11 +212,11 @@ music = {
           \Key
           \Time
           \new Voice <<
-            \OrganLH
-            \tag #'midi \OrganDynamics   % for the midi
+            \PianoLHMusic
+            \tag #'midi \PianoDynamics   % for the midi
           >>
         }
-      >> % organ
+      >> % Piano
 
     #})
   >>
@@ -242,12 +242,12 @@ music = {
   \midi { }
 }
 
-% TODO - I can't figure out how to stop this from making a bogus .pdf (layout) when there is nothing tagged organRH...
+% TODO - I can't figure out how to stop this from making a bogus .pdf (layout) when there is nothing tagged PianoRHMusic...
 \book {
     \bookOutputSuffix "Accomp"
     \score {
       \keepWithTag #'(accomp midi) \unfoldRepeats \music
-#(if (include-verse "OrganLH") #{
+#(if (include-verse "PianoLHMusic") #{
       \midi { 
         \context { 
             \type "Performer_group" 
@@ -278,7 +278,7 @@ music = {
     }
     \score {
       \keepWithTag #'(accomp) \keepWithTag #'(print) \music
-#(if (include-verse "OrganRH") #{
+#(if (include-verse "PianoRHMusic") #{
       \layout { }
 #})
     }

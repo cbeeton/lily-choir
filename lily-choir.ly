@@ -16,7 +16,7 @@ Time = {
   \tempo 4 = \OrigTempo
 }
 
-Chords <- optional chords (if defined, will produce a Lead sheet with just melody, lyrics, and chords)
+ChordMusic <- optional chords (if defined, will produce a Lead sheet with just melody, lyrics, and chords)
 SopranoMusic   <- included (quietly) in all parts, so tempo changes apply to all
 DescantMusic   <- optional descant line.  included (quietly) in all parts, so tempo changes apply to all
 AltoMusic
@@ -82,9 +82,9 @@ music = {
       }
     >>
     #})
-    #(if (include-verse "Chords") #{
+    #(if (include-verse "ChordMusic") #{
       \new ChordNames {
-        \tag #'(print play lead) \Chords
+        \tag #'(print play lead) \ChordMusic
       }
     #})
 

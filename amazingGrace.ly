@@ -116,7 +116,7 @@ BassMusic = \relative c {
   }
 }
 
-Chords = \chordmode {
+ChordMusic = \chordmode {
    \set noChordSymbol=""
    s4 g2. e2:m g4
    c2. g2 d4 e2:m a4:m g2 d4:7 g2. g2

@@ -34,8 +34,10 @@ PianoDynamics -> optional dynamics for accomp
    - have to tweak this file to get or hide bar numbers, etc - should pass in a variable 
    - tweaks also required to adjust spacing for the specific piece...
    - dynamics?
-   - have to edit this file to turn articulate on/off
+   - have to edit this file to turn articulate on/off (it's good for flute descants, but not for sung ones)
    - haven't tested the Piano part lately
+   - ability to change midiInstruments
+   - all the Book files are created even if there is nothing in them
 %}
 
 \include "articulate.ly"

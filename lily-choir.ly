@@ -31,8 +31,6 @@ PianoDynamics -> optional dynamics for accomp
  YMMV - This is still a work in progress
    TODO:
    - alto line doesn't play notes that are in the sop line at the right volume
-   - have to tweak this file to get or hide bar numbers, etc - should pass in a variable 
-   - tweaks also required to adjust spacing for the specific piece...
    - dynamics?
    - have to edit this file to turn articulate on/off (it's good for flute descants, but not for sung ones)
    - haven't tested the Piano part lately
@@ -62,6 +60,10 @@ include-verse =
 )
 
 #(define-missing-variable! "HideMetronome")
+#(define-missing-variable! "HideBarNumbers")
+#(define-missing-variable! "Layout")
+#(define-missing-variable! "LeadLayout")
+#(define-missing-variable! "LeadSystemSpacing")
 
 music = {
   \transpose \OrigKey \TransposeToKey
@@ -224,20 +226,21 @@ music = {
   >>
 }
 
+\layout {
+  \context {
+    \Staff
+    \override VerticalAxisGroup.remove-empty = ##t
+    \override VerticalAxisGroup.remove-first = ##t
+  }
+  \context {
+    \Score
+    #(if HideBarNumbers #{ \omit BarNumber #} )
+  }
+}
+
 \score {
   \keepWithTag #'print \music
-  \layout {
-    \context {
-      \ChordNames
-      \consists "Stanza_number_engraver"
-    }
-    \context {
-      \Score
-      \RemoveAllEmptyStaves
-      \override VerticalAxisGroup.remove-empty = ##t
-      \omit BarNumber
-    }
-  }
+  \layout { $(if Layout Layout) }
 }
 \score {
   \keepWithTag #'play \unfoldRepeats \music
@@ -289,28 +292,12 @@ music = {
 
 \book {
   \bookOutputSuffix "Lead"
-    \paper {
-      page-count = #1
-      system-system-spacing.basic-distance = #22
-    }
+  \paper {
+    system-system-spacing.basic-distance = #(if LeadSystemSpacing LeadSystemSpacing)
+  }
   \score {
     \keepWithTag #'(lead) \music
-    \layout {
-      indent = #0
-      #(layout-set-staff-size 22)
-      \context {
-        \ChordNames
-        \consists "Stanza_number_engraver"
-      }
-      \context {
-        \Score
-        \omit BarNumber
-      }
-      \context {
-        \Staff
-        \RemoveAllEmptyStaves
-      }
-    }
+    \layout { $(if LeadLayout LeadLayout) }
   }
 }
 \book {

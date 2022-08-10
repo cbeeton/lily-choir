@@ -29,6 +29,7 @@ Time = {
 
 % Comment out the next line if you want to see the metronome markings
 HideMetronome = ##t
+HideBarNumbers = ##t
 
 % some functions to allow you to play with the tempo
 NewTempo = \OrigTempo
@@ -76,6 +77,7 @@ SopranoMusic = \relative c' {
   % intro
   \partial 4 b'4 | d4.( b8) d( b) | g2 d4
   e4.( g8) g e | d2 d4 | g2 b8( g) | b2 a4 g2. ~ g2
+  \break
 
   \bar ".|:"
   \repeat volta 5 {
@@ -166,5 +168,14 @@ VerseFive = \lyricmode
   we've no less days to sing God's praise
   than when we'd first be -- gun.
 }
+
+LeadLayout = \layout {
+  #(layout-set-staff-size 22)
+  \context {
+    \Score
+    \omit BarNumber
+  }
+}
+LeadSystemSpacing = #30
 
 \include "lily-choir.ly"

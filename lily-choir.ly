@@ -22,7 +22,7 @@ DescantMusic   <- optional descant line.  included (quietly) in all parts, so te
 AltoMusic
 TenorMusic
 BassMusic
-PianoRHMusic <- optional separate accompaniment RH
+PianoRHMusic <- optional separate accompaniment RH (will create a pdf file with just accomp)
 PianoLHMusic <- optional separate accompaniment LH
 PianoDynamics -> optional dynamics for accomp
 
@@ -35,7 +35,6 @@ PianoDynamics -> optional dynamics for accomp
    - have to edit this file to turn articulate on/off (it's good for flute descants, but not for sung ones)
    - haven't tested the Piano part lately
    - ability to change midiInstruments
-   - all the Book files are created even if there is nothing in them
 %}
 
 \include "articulate.ly"
@@ -64,6 +63,7 @@ include-verse =
 #(define-missing-variable! "Layout")
 #(define-missing-variable! "LeadLayout")
 #(define-missing-variable! "LeadSystemSpacing")
+#(define-missing-variable! "PianoRHMusic")
 
 music = {
   \transpose \OrigKey \TransposeToKey
@@ -182,7 +182,7 @@ music = {
       #(if (include-verse "VerseSeven") #{\tag #'(print lead) \context Lyrics = "lyricsSeven" \lyricsto "sopranos" \VerseSeven#})
     >> % end of ChoirStaff
 
-    #(if (include-verse "PianoRHMusic") #{
+    #(if PianoRHMusic #{
     \tag #'(print accomp) \new PianoStaff 
       \with { midiInstrument = "acoustic grand" }
 %    \articulate 
@@ -247,12 +247,12 @@ music = {
   \midi { }
 }
 
-% TODO - I can't figure out how to stop this from making a bogus .pdf (layout) when there is nothing tagged PianoRHMusic...
-\book {
+% only create accomp files if PianoRHMusic is defined
+#(if PianoRHMusic (print-book-with-defaults #{
+  \book {
     \bookOutputSuffix "Accomp"
     \score {
       \keepWithTag #'(accomp midi) \unfoldRepeats \music
-#(if (include-verse "PianoLHMusic") #{
       \midi { 
         \context { 
             \type "Performer_group" 
@@ -279,15 +279,14 @@ music = {
             \consists "Dynamic_performer"
         }
       }
-#})
     }
     \score {
       \keepWithTag #'(accomp) \keepWithTag #'(print) \music
-#(if (include-verse "PianoRHMusic") #{
       \layout { }
-#})
     }
-}
+  }
+ #})
+)
 
 
 \book {
